@@ -10,7 +10,6 @@ import biosimulations_dispatch.core as core
 import biosimulations_dispatch.utils as util
 
 
-from biosimulations_dispatch.resource_manager import ResourceManager
 
 
 @pytest.fixture(scope="module")

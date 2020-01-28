@@ -11,8 +11,6 @@ import pymongo
 import biosimulations_dispatch.core as core
 import biosimulations_dispatch.utils as util
 
-import biosimulations_dispatch.user_manager as user_manager
-
 
 @pytest.fixture
 def userManager():
