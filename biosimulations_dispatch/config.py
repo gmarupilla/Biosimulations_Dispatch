@@ -29,5 +29,3 @@ class Config(object):
     READ_PREFERENCE = os.getenv("READ_PREFERENCE")
 
 
-class TestConfig(Config):
-    DATABASE = ("python_test_db")
