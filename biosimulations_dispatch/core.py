@@ -27,28 +27,27 @@ class HPCManager:
         # self.read_preference = config.Config.READ_PREFERENCE
 
     def user_manager(self):
-        return user_manager.UserManager(
+        return self.user_manager.UserManager(
             username=self.username,
             password=self.password,
             host=self.server,
             collection="user")
 
     def simulation_manager(self):
-        return simulation_manager.SimulationManager(
+        return self.simulation_manager.SimulationManager(
             username=self.username,
             password=self.password,
             host=self.server,
             collection="simulations")
 
     def model_manager(self):
-        return model_manager.ModelManager(
+        return self.model_manager.ModelManager(
             username=self.username,
             password=self.password,
             host=self.server,
             collection="models")
 
 
-
 if __name__ == "__main__":
-    dbm = DBManager()
-    um = dbm.user_manager()
+    hpc = HPCManager()
+    hm = hpc.user_manager()
