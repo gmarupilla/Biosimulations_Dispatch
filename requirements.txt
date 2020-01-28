@@ -1,0 +1,6 @@
+bson
+pymongo
+genson
+dnspython
+python_dotenv
+python_dateutil
