@@ -38,6 +38,7 @@ env
 
 localSingularityImage="/home/CAM/crbmapi/copasi_latest.img"
 
+# TODO: Update COPASI SBATCH Template
 command="SINGULARITYENV_SIM_ID={simulation_id} SINGULARITYENV_ALGORITHM={algorithm} SINGULARITYENV_JOB_ID=$SLURM_JOB_UID SINGULARITYENV_INITIAL_TIME={initial_time} SINGULARITYENV_NUMBER_OF_POINTS={number_of_points} SINGULARITYENV_OUTPUT_START_TIME={output_start_time} SINGULARITYENV_OUTPUT_END_TIME={output_end_time}  SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR/simulations:/app/simulations --pwd=/app $localSingularityImage"
 echo $command
 
