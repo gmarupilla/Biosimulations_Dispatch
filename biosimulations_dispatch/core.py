@@ -6,9 +6,7 @@
 :License: MIT
 """
 
-from .hpc_manager import HPCManager
-from .config import Config
-
+from biosimulations_dispatch import HPCManager, Config
 
 
 if __name__ == "__main__":
