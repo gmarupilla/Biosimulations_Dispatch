@@ -1,3 +1,6 @@
+from biosimulations_dispatch.sbatch.templates import VCellTemplate, CopasiTemplate
+
+
 class HPCManager:
     def __init__(
             self,
@@ -13,7 +16,10 @@ class HPCManager:
             self.password = Config.PASSWORD
         if not self.server:
             self.server = Config.SERVER
-        self.allowed_biosimulators = ['COPASI', 'VCELL']
+        self.allowed_biosimulators = {
+            'VCELL': VCellTemplate,
+            'COPASI': CopasiTemplate
+        }
         # self.authDB = config.Config.AUTHDB
         # self.read_preference = config.Config.READ_PREFERENCE
         self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password)
@@ -28,8 +34,14 @@ class HPCManager:
             sbml: str, 
             sbml_name: str,
             subscriber_id: str):
-        if simulator in self.allowed_biosimulators:
-            # Generate SBATCH file using value_dict
+        if simulator in self.allowed_biosimulators.keys():
+            simulator_sbatch_instance = self.allowed_biosimulators[simulator]()
+            sbatch = simulator_sbatch_instance.fill_values(value_dict)
+
+            # Generate SBATCH file using value_dict --> DONE
+            (stdin, stdout, stderr) = self.ssh.exec_command(
+                    'echo {0} >> /home/CAM/simulations/{1}/{2}/{2}.sbatch'.format(sbatch, subscriber_id, value_dict['simId'])
+                )
             # Create SBML using given data and name on HPC inside subscriber's simulation using simId
             # Create SEDML using given data and name on HPC inside subscriber's simulation using simId
             # Run the command to execute the simulation inside subscriber's simulation dir using simId
