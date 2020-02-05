@@ -33,8 +33,7 @@ class HPCManager:
             sedml: str, 
             sedml_name: str, 
             sbml: str, 
-            sbml_name: str,
-            subscriber_id: str):
+            sbml_name: str):
         if simulator in self.allowed_biosimulators.keys():
             # Generate SBATCH file using value_dict
             simulator_sbatch_instance = self.allowed_biosimulators[simulator]()
@@ -44,7 +43,7 @@ class HPCManager:
             
             # Creating directory to store everything related to simulation
             # TODO: Store dispatch outputs/errors in DB using query module
-            directory = '/home/CAM/crbmapi/simulations/{0}/{1}'.format(subscriber_id, value_dict['simulation_id'])
+            directory = '/home/CAM/crbmapi/simulations/{0}/{1}'.format(value_dict['subscriber_id'], value_dict['simulation_id'])
             (stdin, stdout, stderr) = self.ssh.exec_command(
                     'mkdir -p {}'.format(directory)
                 )
@@ -56,7 +55,7 @@ class HPCManager:
 
 
             # Create SBML using given data and name on HPC inside subscriber's simulation using simId
-            sbml_remote = self.ftp_client.file('{}/{}.sbml'.format(directory, sbml_name), 'w', -1)
+            sbml_remote = self.ftp_client.file('{}/{}.xml'.format(directory, sbml_name), 'w', -1)
             sbml_remote.write(sbml)
             sbml_remote.flush()
 
