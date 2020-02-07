@@ -27,13 +27,15 @@ class HPCManager:
 
 
     def dispatch_job(
-            self, 
-            simulator: str, 
+            self, simulator: str, 
             value_dict: dict, 
             sedml: str, 
             sedml_name: str, 
             sbml: str, 
             sbml_name: str):
+        """
+        SEDML_NAME and SBML_NAME are without extensions in param
+        """
         if simulator in self.allowed_biosimulators.keys():
             # Generate SBATCH file using value_dict
             simulator_sbatch_instance = self.allowed_biosimulators[simulator]()

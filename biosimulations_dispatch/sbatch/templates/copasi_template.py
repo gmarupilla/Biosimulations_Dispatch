@@ -8,7 +8,7 @@
 template_string = \
 '''#!/bin/bash
 #SBATCH --job-name=test
-#SBATCH --output={simulation_id}.output
+#SBATCH --output={temp_dir}.output
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=1000

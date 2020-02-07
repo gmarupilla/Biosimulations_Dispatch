@@ -8,7 +8,7 @@
 template_string = \
 '''#!/bin/bash
 #SBATCH --job-name=test
-#SBATCH --output={simulation_id}.output
+#SBATCH --output={temp_dir}.output
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=1000
@@ -36,9 +36,9 @@ date
 echo ENVIRONMENT
 env
 
-localSingularityImage="/home/CAM/crbmapi/vcell_standalone.img"
+localSingularityImage="/home/CAM/crbmapi/vcell_latest.img"
 
-command="SINGULARITYENV_SIM_ID={simulation_id} SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR/sedml:/usr/local/app/sedml  $localSingularityImage"
+command="SINGULARITYENV_SIM_ID={simulation_id} SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR:/usr/local/app/vcell/simulation  $localSingularityImage"
 echo $command
 
 eval $command'''
