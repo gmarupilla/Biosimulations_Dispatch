@@ -31,12 +31,14 @@ class HPCManager:
             value_dict: dict, 
             sedml: str, 
             sedml_name: str, 
-            sbml: str, 
-            sbml_name: str):
+            sbml: str):
         """
         SEDML_NAME and SBML_NAME are without extensions in param
         """
         if simulator in self.allowed_biosimulators.keys():
+            # Hardcoded for 1 model - 1 task sedml file
+            sbml_name = 'model'
+            
             # Generate SBATCH file using value_dict
             simulator_sbatch_instance = self.allowed_biosimulators[simulator]()
 
