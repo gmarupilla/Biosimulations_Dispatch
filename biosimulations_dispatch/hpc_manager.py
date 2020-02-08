@@ -1,5 +1,6 @@
 from biosimulations_dispatch.sbatch.templates import VCellTemplate, CopasiTemplate
 import paramiko
+from biosimulations_dispatch.config import Config
 
 
 class HPCManager:
@@ -38,7 +39,7 @@ class HPCManager:
         if simulator in self.allowed_biosimulators.keys():
             # Hardcoded for 1 model - 1 task sedml file
             sbml_name = 'model'
-            
+
             # Generate SBATCH file using value_dict
             simulator_sbatch_instance = self.allowed_biosimulators[simulator]()
 

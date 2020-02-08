@@ -17,21 +17,10 @@ if os.path.exists(home_path):
 
 class Config(object):
     PRODUCTION = os.getenv("PRODUCTION", False)
-    USERNAME = os.getenv("MONGO_USERNAME")
-    PASSWORD = os.getenv("MONGO_PASSWORD")
-    SERVER = os.getenv("MONGO_SERVER")
-    PORT = os.getenv("MONGO_PORT", None)
-    DATABASE = os.getenv("MONGO_DATABASE", "Test_DB")
     HPC_HOST = os.environ.get('HPC_HOST')
     HPC_USER = os.environ.get('HPC_USER')
     HPC_PASS = os.environ.get('HPC_PASS')
     JOBHOOK_URL = '{}/jobhook'.format(os.getenv('JOBHOOK_HOST'))
-    HPC_PATH_PREFIX = '/home/CAM/{}/tmp'.format(HPC_USER)
-    # Below are not needed for now, may be if we start to self manage repl sets
-    REPLSET = os.getenv("MONGO_REPL")
-    AUTHDB = os.getenv("MONGO_AUTHDB")
-    SESSION_KEY = os.getenv("FLASK_SESSION_KEY")
-    READ_PREFERENCE = os.getenv("READ_PREFERENCE")
 
 
 

@@ -76,7 +76,4 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
     ],
-    entry_points={
-        'console_scripts': ["biosimulations_dispatch = biosimulations_dispatch.__main__:main"],
-    },
 )
