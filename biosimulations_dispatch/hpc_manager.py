@@ -26,7 +26,6 @@ class HPCManager:
         # self.read_preference = config.Config.READ_PREFERENCE
         self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password)
 
-
     def dispatch_job(
             self, simulator: str, 
             value_dict: dict, 
@@ -58,13 +57,10 @@ class HPCManager:
             sbatch_remote.write(sbatch)
             sbatch_remote.flush()
 
-
             # Create SBML using given data and name on HPC inside subscriber's simulation using simId
             sbml_remote = self.ftp_client.file('{}/{}.xml'.format(directory, sbml_name), 'w', -1)
             sbml_remote.write(sbml)
             sbml_remote.flush()
-
-        
 
             # Create SEDML using given data and name on HPC inside subscriber's simulation using simId
             sedml_remote = self.ftp_client.file('{}/{}.sedml'.format(directory, sedml_name), 'w', -1)

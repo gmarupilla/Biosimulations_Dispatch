@@ -55,6 +55,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# Local tests
+test_COPASI.py
+test_VCELL.py
+
 # Translations
 *.mo
 *.pot

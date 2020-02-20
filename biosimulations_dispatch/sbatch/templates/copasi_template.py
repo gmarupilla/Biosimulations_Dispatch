@@ -4,7 +4,7 @@
 :Copyright: 2019, UCONN Health
 :License: MIT
 """
-
+# TODO: Update COPASI SBATCH Template
 template_string = \
 '''#!/bin/bash
 #SBATCH --job-name=test
@@ -38,7 +38,6 @@ env
 
 localSingularityImage="/home/CAM/crbmapi/copasi_latest.img"
 
-# TODO: Update COPASI SBATCH Template
 command="SINGULARITYENV_AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID SINGULARITYENV_AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET SINGULARITYENV_AUTH0_BIOSIMULATIONS_AUDIENCE=$AUTH0_BIOSIMULATIONS_AUDIENCE SINGULARITYENV_AUTH0_TOKEN_URL=$AUTH0_TOKEN_URL SINGULARITYENV_AUTH0_GRANT_TYPE=$AUTH0_GRANT_TYPE SINGULARITYENV_SIMULATION_ID={simulation_id}  SINGULARITYENV_JOB_ID=$SLURM_JOB_UID   SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR:/usr/local/app/copasi/simulation --pwd=/app $localSingularityImage"
 echo $command
 

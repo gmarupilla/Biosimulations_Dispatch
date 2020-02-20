@@ -21,6 +21,3 @@ class Config(object):
     HPC_USER = os.environ.get('HPC_USER')
     HPC_PASS = os.environ.get('HPC_PASS')
     JOBHOOK_URL = '{}/jobhook'.format(os.getenv('JOBHOOK_HOST'))
-
-
-
