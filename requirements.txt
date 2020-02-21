@@ -1,0 +1,11 @@
+bcrypt
+cffi
+cryptography
+dnspython
+genson
+paramiko
+pycparser
+PyNaCl
+python_dateutil
+python_dotenv
+six

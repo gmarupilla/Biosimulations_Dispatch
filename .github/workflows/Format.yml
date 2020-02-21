@@ -1,0 +1,24 @@
+name: Format
+on:
+  push:
+    branches:
+      - master
+jobs:
+  autopep8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: autopep8
+        uses: peter-evans/autopep8@v1.0.0
+        with:
+          args: --recursive --in-place --aggressive --aggressive .
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Formatting Fixes "
+          body: "Automatically formatted using autopep8"
+          lables: style
+          branch: formatting
+          assignees: gmarupilla
+          reviewers: gmarupilla
