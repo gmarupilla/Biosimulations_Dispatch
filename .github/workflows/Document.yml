@@ -20,7 +20,7 @@ jobs:
       - name: Document
         run: |
           sphinx-apidoc ./ -o ./docs/source/modules/
-          sphinx-build ./docs/source/modules/ ./docs/html/
+          sphinx-build ./docs/source/ ./docs/html/
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
