@@ -19,9 +19,8 @@ jobs:
           
       - name: Document
         run: |
-          sphinx-apidoc ./biosimulations_dispatch -o ./docs/source/modules/
-          cd docs
-          make html
+          sphinx-apidoc ./ -o ./docs/source/modules/
+          sphinx-build ./docs/source/modules/ ./docs/html/
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
