@@ -4,6 +4,8 @@
 
 A python package to dispatch the BioSimulations models and SED-ML for cluster computing(HPC) and database
 
+![Document](https://github.com/reproducible-biomedical-modeling/Biosimulations_Dispatch/workflows/Document/badge.svg)
+![Upload Python Package](https://github.com/reproducible-biomedical-modeling/Biosimulations_Dispatch/workflows/Upload%20Python%20Package/badge.svg)
 [![PyPI package](https://img.shields.io/pypi/v/biosimulations_dispatch.svg)](https://pypi.python.org/pypi/biosimulations_dispatch)
 [![PyPI Status](https://img.shields.io/pypi/status/biosimulations_query.svg)](https://pypi.python.org/pypi/biosimulations_query)
 [![GitHub issues](https://img.shields.io/github/issues/reproducible-biomedical-modeling/Biosimulations_Dispatch?logo=GitHub)](https://github.com/reproducible-biomedical-modeling/Biosimulations_Dispatch/issues)
