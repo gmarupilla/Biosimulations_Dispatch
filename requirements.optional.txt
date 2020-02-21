@@ -1,3 +1,0 @@
-[dev]
-pypandoc
-python_semantic_release

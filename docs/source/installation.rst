@@ -2,19 +2,14 @@ Installation
 ============
 
 Prerequisites
---------------------------
+-------------
 
-* Python
-* Pip
+#. python >= 3.6
+#. pip
+#. CCAM(Center for Cell Analysis Modelling) account credentials to access HPC(UConn Health)
+#. Computer cluster server host(HPC UConn Node)
 
-Latest revision from GitHub
----------------------------
-Run the following command to install the latest version from GitHub::
+Run the following command to install from PyPi::
 
-    pip install git+https://github.com/reproducible-biomedical-modeling/biosimulations_dispatch
+    pip install biosimulations-dispatch
 
-Latest release From PyPI
----------------------------
-Run the following command to install the latest release from PyPI::
-
-    pip install biosimulations_dispatch[all]
