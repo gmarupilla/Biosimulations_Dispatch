@@ -12,11 +12,11 @@ class HPCManager:
         self.username = username
         self.password = password
         self.server = server
-        if not self.username:
+        if self.username is None:
             self.username = Config.USERNAME
-        if not self.password:
+        if self.password is None:
             self.password = Config.PASSWORD
-        if not self.server:
+        if self.server is None:
             self.server = Config.SERVER
         self.allowed_biosimulators = {
             'VCELL': VCellTemplate,
@@ -47,7 +47,7 @@ class HPCManager:
             
             # Creating directory to store everything related to simulation
             # TODO: Store dispatch outputs/errors in DB using query module
-            directory = '/home/CAM/crbmapi/simulations/{0}/{1}'.format(value_dict['subscriber_id'], value_dict['simulation_id'])
+            directory = value_dict['temp_dir']
             (stdin, stdout, stderr) = self.ssh.exec_command(
                     'mkdir -p {}'.format(directory)
                 )
@@ -74,6 +74,25 @@ class HPCManager:
             return True
         else: 
             return False
+
+    def get_output_file(self, sim_spec: dict, local_path: str):
+        path = sim_spec['temp_dir']
+        # TODO: Make task name dynamic instead of 'task1' when multiple tasks are created from single SEDml
+        files_path = os.path.join(path, 'out', 'task1')
+        remote_files = self.ftp_client.listdir(files_path)
+        complete_local_path = os.path.join(local_path, sim_spec['subscriber_id'], sim_spec['simulation_id'])
+        if sim_spec['simulator'] == 'COPASI':
+            result_file = ''
+            for file in remote_files:
+                if file.endswith('.ida'):
+                    result_file = file
+            self.ftp_client.get(
+                    os.path.join(files_path, result_file),
+                    complete_local_path
+                )
+        else:
+            pass
+        return True
 
     def __setup_ssh_ftp(self, host=None, username=None, password=None):
         """Set up the SSH and FTP connections to the HPC
