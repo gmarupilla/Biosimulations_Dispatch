@@ -1,3 +1,4 @@
+import os
 from biosimulations_dispatch.sbatch.templates import VCellTemplate, CopasiTemplate
 import paramiko
 from biosimulations_dispatch.config import Config
@@ -13,17 +14,15 @@ class HPCManager:
         self.password = password
         self.server = server
         if self.username is None:
-            self.username = Config.USERNAME
+            self.username = Config.HPC_USER
         if self.password is None:
-            self.password = Config.PASSWORD
+            self.password = Config.HPC_PASS
         if self.server is None:
-            self.server = Config.SERVER
+            self.server = Config.HPC_HOST
         self.allowed_biosimulators = {
             'VCELL': VCellTemplate,
             'COPASI': CopasiTemplate
         }
-        # self.authDB = config.Config.AUTHDB
-        # self.read_preference = config.Config.READ_PREFERENCE
         self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password)
 
     def dispatch_job(
