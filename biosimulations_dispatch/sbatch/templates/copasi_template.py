@@ -8,7 +8,7 @@
 template_string = \
 '''#!/bin/bash
 #SBATCH --job-name=test
-#SBATCH --output={temp_dir}.output
+#SBATCH --output={tempDir}.output
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=1000
@@ -22,7 +22,7 @@ source /usr/share/Modules/init/bash
 
 module load singularity/3.1.1
 
-TMPDIR={temp_dir}
+TMPDIR={tempDir}
 echo "using TMPDIR=$TMPDIR"
 if [ ! -e $TMPDIR ]; then mkdir -p $TMPDIR ; fi
 
@@ -38,7 +38,7 @@ env
 
 localSingularityImage="/home/CAM/crbmapi/copasi_latest.img"
 
-command="SINGULARITYENV_AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID SINGULARITYENV_AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET SINGULARITYENV_AUTH0_BIOSIMULATIONS_AUDIENCE=$AUTH0_BIOSIMULATIONS_AUDIENCE SINGULARITYENV_AUTH0_TOKEN_URL=$AUTH0_TOKEN_URL SINGULARITYENV_AUTH0_GRANT_TYPE=$AUTH0_GRANT_TYPE SINGULARITYENV_SIMULATION_ID={simulation_id}  SINGULARITYENV_JOB_ID=$SLURM_JOB_UID   SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR:/usr/local/app/copasi/simulation --pwd=/app $localSingularityImage"
+command="SINGULARITYENV_AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID SINGULARITYENV_AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET SINGULARITYENV_AUTH0_BIOSIMULATIONS_AUDIENCE=$AUTH0_BIOSIMULATIONS_AUDIENCE SINGULARITYENV_AUTH0_TOKEN_URL=$AUTH0_TOKEN_URL SINGULARITYENV_AUTH0_GRANT_TYPE=$AUTH0_GRANT_TYPE SINGULARITYENV_SIMULATION_ID={id}  SINGULARITYENV_JOB_ID=$SLURM_JOB_UID   SINGULARITYENV_JOBHOOK_URL={jobhookURL} singularity run --bind $TMPDIR:/usr/local/app/copasi/simulation --pwd=/app $localSingularityImage"
 echo $command
 
 eval $command'''
@@ -47,7 +47,7 @@ eval $command'''
 class CopasiTemplate:
     def __init__(self):
         self.template_string = template_string
-        self.key_list = ['simulation_id', 'temp_dir', 'jobhook_url']
+        self.key_list = ['id', 'tempDir', 'jobhookURL']
 
     def fill_values(self, value_dict: dict):
         return self.template_string.format(**value_dict)

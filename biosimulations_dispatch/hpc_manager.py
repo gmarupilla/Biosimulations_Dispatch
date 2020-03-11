@@ -46,7 +46,7 @@ class HPCManager:
             
             # Creating directory to store everything related to simulation
             # TODO: Store dispatch outputs/errors in DB using query module
-            directory = value_dict['temp_dir']
+            directory = value_dict['tempDir']
             (stdin, stdout, stderr) = self.ssh.exec_command(
                     'mkdir -p {}'.format(directory)
                 )
@@ -75,22 +75,19 @@ class HPCManager:
             return False
 
     def get_output_file(self, sim_spec: dict, local_path: str):
-        path = sim_spec['temp_dir']
-        # TODO: Make task name dynamic instead of 'task1' when multiple tasks are created from single SEDml
-        files_path = os.path.join(path, 'out', 'task1')
+        path = sim_spec['tempDir']
+        files_path = os.path.join(path, 'out')
+        # TODO: Check the Task DIR from task name when accepting more than 1 task for simulation
+        task_dir = self.ftp_client.listdir(files_path)[0]
+        files_path = os.path.join(files_path, task_dir)
         remote_files = self.ftp_client.listdir(files_path)
-        complete_local_path = os.path.join(local_path, sim_spec['subscriber_id'], sim_spec['simulation_id'])
-        if sim_spec['simulator'] == 'COPASI':
-            result_file = ''
-            for file in remote_files:
-                if file.endswith('.ida'):
-                    result_file = file
-            self.ftp_client.get(
-                    os.path.join(files_path, result_file),
-                    complete_local_path
-                )
-        else:
-            pass
+        complete_local_path = os.path.join(local_path, sim_spec['owner'], sim_spec['id'])
+        for file in remote_files:
+            if file.endswith('.ida') or file.endswith('.cvodeInput') or file.endswith('.xml'):
+                self.ftp_client.get(
+                        os.path.join(files_path, file),
+                        complete_local_path
+                    )
         return True
 
     def __setup_ssh_ftp(self, host=None, username=None, password=None):

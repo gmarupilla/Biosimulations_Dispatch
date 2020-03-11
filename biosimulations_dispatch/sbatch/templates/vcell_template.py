@@ -8,7 +8,7 @@
 template_string = \
 '''#!/bin/bash
 #SBATCH --job-name=test
-#SBATCH --output={temp_dir}.output
+#SBATCH --output={tempDir}.output
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=1000
@@ -22,7 +22,7 @@ source /usr/share/Modules/init/bash
 
 module load singularity/3.1.1
 
-TMPDIR={temp_dir}
+TMPDIR={tempDir}
 echo "using TMPDIR=$TMPDIR"
 if [ ! -e $TMPDIR ]; then mkdir -p $TMPDIR ; fi
 
@@ -38,7 +38,7 @@ env
 
 localSingularityImage="/home/CAM/crbmapi/vcell_latest.img"
 
-command="SINGULARITYENV_SIM_ID={simulation_id} SINGULARITYENV_JOBHOOK_URL={jobhook_url} singularity run --bind $TMPDIR:/usr/local/app/vcell/simulation  $localSingularityImage"
+command="SINGULARITYENV_SIM_ID={id} SINGULARITYENV_JOBHOOK_URL={jobhookURL} singularity run --bind $TMPDIR:/usr/local/app/vcell/simulation  $localSingularityImage"
 echo $command
 
 eval $command'''
@@ -47,7 +47,7 @@ eval $command'''
 class VCellTemplate:
     def __init__(self):
         self.template_string = template_string
-        self.key_list = ['simulation_id', 'temp_dir', 'jobhook_url']
+        self.key_list = ['id', 'tempDir', 'jobhookURL']
 
     def fill_values(self, value_dict: dict):
         return self.template_string.format(**value_dict)
