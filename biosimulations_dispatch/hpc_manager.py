@@ -30,10 +30,12 @@ class HPCManager:
             value_dict: dict, 
             sedml: str, 
             sedml_name: str, 
-            sbml: str):
+            sbml: str,
+            temp_dir: str):
         """
         SEDML_NAME and SBML_NAME are without extensions in param
         """
+        value_dict['tempDir'] = '{}/{}/{}'.format(temp_dir, value_dict['owner'], value_dict['id'])
         if simulator in self.allowed_biosimulators.keys():
             # Hardcoded for 1 model - 1 task sedml file
             sbml_name = 'model'
