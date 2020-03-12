@@ -76,8 +76,9 @@ class HPCManager:
         else: 
             return False
 
-    def get_output_file(self, sim_spec: dict, local_path: str):
-        path = sim_spec['tempDir']
+    def get_output_file(self, sim_spec: dict, local_path: str, temp_dir: str):
+        temp_dir = '{}/{}/{}'.format(temp_dir, sim_spec['owner'], sim_spec['id'])
+        path = temp_dir
         files_path = os.path.join(path, 'out')
         # TODO: Check the Task DIR from task name when accepting more than 1 task for simulation
         task_dir = self.ftp_client.listdir(files_path)[0]
