@@ -143,4 +143,4 @@ dmypy.json
  .idea/
 .vscode/
 .idea/
-.DS_Store/
+**/.DS_Store
