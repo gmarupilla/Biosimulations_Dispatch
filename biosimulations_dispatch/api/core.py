@@ -31,7 +31,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 def dispatch_to_hpc():
     if request.method == 'POST' and request.remote_addr == Config.ALLOWED_ORIGIN:
         try:
-            hpc_manager = HPCManager(username=Config.HPC_USER, password=Config.HPC_PASS, server=Config.HPC_HOST)
+            hpc_manager = HPCManager(username=Config.HPC_USER, password=Config.HPC_PASS, server=Config.HPC_HOST, sftp_server=Config.HPC_SFTP_HOST)
             data = request.get_json()
             hpc_manager.dispatch_job(
                 # TODO: parse simulator from sim spec within dispatch_job

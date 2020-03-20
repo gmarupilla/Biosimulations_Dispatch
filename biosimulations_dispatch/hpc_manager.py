@@ -9,21 +9,25 @@ class HPCManager:
             self,
             username=None,
             password=None,
-            server=None):
+            server=None,
+            sftp_server=None):
         self.username = username
         self.password = password
         self.server = server
+        self.sftp_server = sftp_server
         if self.username is None:
             self.username = Config.HPC_USER
         if self.password is None:
             self.password = Config.HPC_PASS
         if self.server is None:
             self.server = Config.HPC_HOST
+        if self.sftp_server is None:
+            self.sftp_server = Config.HPC_SFTP_HOST
         self.allowed_biosimulators = {
             'VCELL': VCellTemplate,
             'COPASI': CopasiTemplate
         }
-        self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password)
+        self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password, sftp_host=sftp_server)
 
     def dispatch_job(
             self, simulator: str, 
@@ -93,13 +97,14 @@ class HPCManager:
                     )
         return True
 
-    def __setup_ssh_ftp(self, host=None, username=None, password=None):
+    def __setup_ssh_ftp(self, host=None, username=None, password=None, sftp_host=None):
         """Set up the SSH and FTP connections to the HPC
 
         Args:
             host (String, optional): The hostname of the server. Defaults the configuration
             username (String, optional): The username. Defaults to the configuration
-            password (String, optional): The password. Defaults to the configuration`
+            password (String, optional): The password. Defaults to the configuration
+            sft_host (String, optional): The Globus endpoint to connect to HPC via SFTP. Defaults to the configuration
 
         Returns:
             ssh_client, ftp_client: The SHH and FTP connections to the HPC"""
@@ -111,5 +116,14 @@ class HPCManager:
             username=username,
             password=password
         )
-        ftp_client = ssh.open_sftp()
+        # Open a transport
+        ftp_host,port = sftp_host, 22
+        transport = paramiko.Transport((ftp_host,port))
+
+        # Auth    
+        username,password = username, password
+        transport.connect(None,username,password)
+
+        # Go!    
+        ftp_client = paramiko.SFTPClient.from_transport(transport)
         return ssh, ftp_client
