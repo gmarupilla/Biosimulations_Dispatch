@@ -6,7 +6,7 @@
 """
 
 template_string = \
-'''#!/bin/bash
+    '''#!/bin/bash
 #SBATCH --job-name=test
 #SBATCH --output={tempDir}.output
 #SBATCH --ntasks=1
@@ -51,4 +51,3 @@ class VCellTemplate:
 
     def fill_values(self, value_dict: dict):
         return self.template_string.format(**value_dict)
-

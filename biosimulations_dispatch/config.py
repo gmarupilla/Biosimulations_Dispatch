@@ -9,7 +9,7 @@ Contains the configuration for the dispatch module to connect UConn Computer clu
 import os
 from dotenv import load_dotenv
 
-if os.getenv('HPC_HOST') is None:    
+if os.getenv('HPC_HOST') is None:
     from dotenv import load_dotenv
     load_dotenv()
 

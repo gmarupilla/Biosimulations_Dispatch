@@ -6,6 +6,7 @@ from flask_cors import CORS, cross_origin
 from biosimulations_dispatch.config import Config
 from biosimulations_dispatch.hpc_manager import HPCManager
 
+
 class PrefixMiddleware:
     def __init__(self, app, prefix=''):
         self.app = app
@@ -31,17 +32,22 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 def dispatch_to_hpc():
     if request.method == 'POST' and request.remote_addr == Config.ALLOWED_ORIGIN:
         try:
-            hpc_manager = HPCManager(username=Config.HPC_USER, password=Config.HPC_PASS, server=Config.HPC_HOST, sftp_server=Config.HPC_SFTP_HOST)
+            hpc_manager = HPCManager(
+                username=Config.HPC_USER,
+                password=Config.HPC_PASS,
+                server=Config.HPC_HOST,
+                sftp_server=Config.HPC_SFTP_HOST)
             data = request.get_json()
             hpc_manager.dispatch_job(
                 # TODO: parse simulator from sim spec within dispatch_job
-                    simulator = data['simSpec']['simulator'],
-                    value_dict = data['simSpec'],
-                    sedml = data['sedml'],
-                    sedml_name = data['sedmlName'],
-                    sbml = data['sbml'],
-                    temp_dir = Config.TEMP_DIR
-                )
-            return jsonify({"message": 'Simulation has been successfully dispatched to HPC'}), 200
+                simulator=data['simSpec']['simulator'],
+                value_dict=data['simSpec'],
+                sedml=data['sedml'],
+                sedml_name=data['sedmlName'],
+                sbml=data['sbml'],
+                temp_dir=Config.TEMP_DIR
+            )
+            return jsonify(
+                {"message": 'Simulation has been successfully dispatched to HPC'}), 200
         except BaseException as ex:
             return jsonify({'message': "Error occured: " + str(ex)}), 400

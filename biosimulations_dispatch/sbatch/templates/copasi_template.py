@@ -6,7 +6,7 @@
 """
 # TODO: Update COPASI SBATCH Template
 template_string = \
-'''#!/bin/bash
+    '''#!/bin/bash
 #SBATCH --job-name=test
 #SBATCH --output={tempDir}.output
 #SBATCH --ntasks=1
