@@ -2,6 +2,7 @@ import os
 from biosimulations_dispatch.sbatch.templates import VCellTemplate, CopasiTemplate
 import paramiko
 from biosimulations_dispatch.config import Config
+import time
 
 
 class HPCManager:
@@ -9,21 +10,25 @@ class HPCManager:
             self,
             username=None,
             password=None,
-            server=None):
+            server=None,
+            sftp_server=None):
         self.username = username
         self.password = password
         self.server = server
+        self.sftp_server = sftp_server
         if self.username is None:
             self.username = Config.HPC_USER
         if self.password is None:
             self.password = Config.HPC_PASS
         if self.server is None:
             self.server = Config.HPC_HOST
+        if self.sftp_server is None:
+            self.sftp_server = Config.HPC_SFTP_HOST
         self.allowed_biosimulators = {
             'VCELL': VCellTemplate,
             'COPASI': CopasiTemplate
         }
-        self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password)
+        self.ssh, self.ftp_client = self.__setup_ssh_ftp(host=server, username=username, password=password, sftp_host=sftp_server)
 
     def dispatch_job(
             self, simulator: str, 
@@ -49,10 +54,14 @@ class HPCManager:
             # Creating directory to store everything related to simulation
             # TODO: Store dispatch outputs/errors in DB using query module
             directory = value_dict['tempDir']
+
+            # self.ssh.invoke_shell()
+            # ssh_shell.send('mkdir -p {}'.format(directory))
             (stdin, stdout, stderr) = self.ssh.exec_command(
                     'mkdir -p {}'.format(directory)
                 )
-            
+            while not stdout.channel.exit_status_ready() and not stdout.channel.recv_ready():
+                time.sleep(1)
             # Create sbatch file inside simultion directory
             sbatch_remote = self.ftp_client.file('{}/run.sbatch'.format(directory), 'w', -1)
             sbatch_remote.write(sbatch)
@@ -68,10 +77,32 @@ class HPCManager:
             sedml_remote.write(sedml)
             sedml_remote.flush()
 
+            time.sleep(30)
+
+
             # Run the command to execute the simulation inside subscriber's simulation dir using simId
-            (stdin, stdout, stderr) = self.ssh.exec_command(
+            # self.ssh.invoke_shell()
+            # ssh_shell.send('sbatch {}/run.sbatch'.format(directory))
+            ssh, _ = self.__setup_ssh_ftp(host=self.server, username=self.username, password=self.password, sftp_host=self.sftp_server)
+            stdin, stdout, stderr = ssh.exec_command(
                     'sbatch {}/run.sbatch'.format(directory)
                 )
+            
+
+            streams = {'stdin':stdin, 'stdout':stdout, 'stderr':stderr}
+
+            for key, value in streams.items():
+                output = list()
+                try:
+                    for line in value:
+                        output.append(line)
+                    print(key, output)
+                except Exception as ex:
+                    print('Error while printing stream: ',ex)
+
+            # print("STDIN = ", stdin.readlines())
+            # print("STDOUT = ", stdout.readlines())
+            # print("STDERR = ", stderr.readlines())
             return True
         else: 
             return False
@@ -93,13 +124,14 @@ class HPCManager:
                     )
         return True
 
-    def __setup_ssh_ftp(self, host=None, username=None, password=None):
+    def __setup_ssh_ftp(self, host=None, username=None, password=None, sftp_host=None):
         """Set up the SSH and FTP connections to the HPC
 
         Args:
             host (String, optional): The hostname of the server. Defaults the configuration
             username (String, optional): The username. Defaults to the configuration
-            password (String, optional): The password. Defaults to the configuration`
+            password (String, optional): The password. Defaults to the configuration
+            sft_host (String, optional): The Globus endpoint to connect to HPC via SFTP. Defaults to the configuration
 
         Returns:
             ssh_client, ftp_client: The SHH and FTP connections to the HPC"""
@@ -111,5 +143,14 @@ class HPCManager:
             username=username,
             password=password
         )
-        ftp_client = ssh.open_sftp()
+        # Open a transport
+        ftp_host,port = sftp_host, 22
+        transport = paramiko.Transport((ftp_host,port))
+
+        # Auth    
+        username,password = username, password
+        transport.connect(None,username,password)
+
+        # Go!    
+        ftp_client = paramiko.SFTPClient.from_transport(transport)
         return ssh, ftp_client
