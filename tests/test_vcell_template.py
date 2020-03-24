@@ -46,3 +46,7 @@ class TestVcellTemplate(unittest.TestCase):
         self.assertEqual(test_template_string2, vcell_test2)
         self.assertEqual(test_template_string3, vcell_test3)
         self.assertEqual(test_template_string4, vcell_test4)
+
+
+if __name__ == "__main__":
+    unittest.main()

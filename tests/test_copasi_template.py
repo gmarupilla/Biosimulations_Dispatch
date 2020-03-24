@@ -47,7 +47,6 @@ class TestCopasiTemplate(unittest.TestCase):
         self.assertEqual(test_template_string3, copasi_test3)
         self.assertEqual(test_template_string4, copasi_test4)
 
-        # assert test_template_string1 == copasi_test1, "Test case 1 failed"
-        # assert test_template_string2 == copasi_test2, "Test case 2 failed"
-        # assert test_template_string3 == copasi_test3, "Test case 3 failed"
-        # assert test_template_string4 == copasi_test4, "Test case 4 failed"
+
+if __name__ == "__main__":
+    unittest.main()
