@@ -29,7 +29,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 @app.route('/dispatch', methods=['POST'])
 @cross_origin()
 def dispatch_to_hpc():
-    if request.method == 'POST' and request.remote_addr == Config.ALLOWED_ORIGIN:
+    if request.method == 'POST' and request.remote_addr in Config.ALLOWED_ORIGINS:
         try:
             hpc_manager = HPCManager(username=Config.HPC_USER, password=Config.HPC_PASS, server=Config.HPC_HOST, sftp_server=Config.HPC_SFTP_HOST)
             data = request.get_json()
@@ -45,3 +45,7 @@ def dispatch_to_hpc():
             return jsonify({"message": 'Simulation has been successfully dispatched to HPC'}), 200
         except BaseException as ex:
             return jsonify({'message': "Error occured: " + str(ex)}), 400
+    elif request.remote_addr not in Config.ALLOWED_ORIGINS:
+        return jsonify({'message': 'Requester origin \'{}\' is not allowed'.format(request.remote_addr)}), 400
+    else:
+        return jsonify({'message': 'Bad request'}), 400

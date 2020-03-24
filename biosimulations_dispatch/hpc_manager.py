@@ -2,6 +2,7 @@ import os
 from biosimulations_dispatch.sbatch.templates import VCellTemplate, CopasiTemplate
 import paramiko
 from biosimulations_dispatch.config import Config
+import time
 
 
 class HPCManager:
@@ -53,10 +54,14 @@ class HPCManager:
             # Creating directory to store everything related to simulation
             # TODO: Store dispatch outputs/errors in DB using query module
             directory = value_dict['tempDir']
+
+            # self.ssh.invoke_shell()
+            # ssh_shell.send('mkdir -p {}'.format(directory))
             (stdin, stdout, stderr) = self.ssh.exec_command(
                     'mkdir -p {}'.format(directory)
                 )
-            
+            while not stdout.channel.exit_status_ready() and not stdout.channel.recv_ready():
+                time.sleep(1)
             # Create sbatch file inside simultion directory
             sbatch_remote = self.ftp_client.file('{}/run.sbatch'.format(directory), 'w', -1)
             sbatch_remote.write(sbatch)
@@ -72,10 +77,32 @@ class HPCManager:
             sedml_remote.write(sedml)
             sedml_remote.flush()
 
+            time.sleep(30)
+
+
             # Run the command to execute the simulation inside subscriber's simulation dir using simId
-            (stdin, stdout, stderr) = self.ssh.exec_command(
+            # self.ssh.invoke_shell()
+            # ssh_shell.send('sbatch {}/run.sbatch'.format(directory))
+            ssh, _ = self.__setup_ssh_ftp(host=self.server, username=self.username, password=self.password, sftp_host=self.sftp_server)
+            stdin, stdout, stderr = ssh.exec_command(
                     'sbatch {}/run.sbatch'.format(directory)
                 )
+            
+
+            streams = {'stdin':stdin, 'stdout':stdout, 'stderr':stderr}
+
+            for key, value in streams.items():
+                output = list()
+                try:
+                    for line in value:
+                        output.append(line)
+                    print(key, output)
+                except Exception as ex:
+                    print('Error while printing stream: ',ex)
+
+            # print("STDIN = ", stdin.readlines())
+            # print("STDOUT = ", stdout.readlines())
+            # print("STDERR = ", stderr.readlines())
             return True
         else: 
             return False

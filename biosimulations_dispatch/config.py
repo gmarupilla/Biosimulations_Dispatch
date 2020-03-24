@@ -21,5 +21,5 @@ class Config(object):
     HPC_PASS = os.environ.get('HPC_PASS')
     HPC_SFTP_HOST = os.environ.get('HPC_SFTP_HOST')
     JOBHOOK_URL = '{}/jobhook'.format(os.getenv('JOBHOOK_HOST'))
-    ALLOWED_ORIGIN = os.environ.get('ALLOWED_ORIGIN')
+    ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGIN').split(',')
     TEMP_DIR = os.environ.get('TEMP_DIR')
