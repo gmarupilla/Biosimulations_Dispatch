@@ -33,7 +33,7 @@ def dispatch_to_hpc():
         try:
             hpc_manager = HPCManager(username=Config.HPC_USER, password=Config.HPC_PASS, server=Config.HPC_HOST, sftp_server=Config.HPC_SFTP_HOST)
             data = request.get_json()
-            hpc_manager.dispatch_job(
+            result = hpc_manager.dispatch_job(
                 # TODO: parse simulator from sim spec within dispatch_job
                     simulator = data['simSpec']['simulator'],
                     value_dict = data['simSpec'],
@@ -42,7 +42,10 @@ def dispatch_to_hpc():
                     sbml = data['sbml'],
                     temp_dir = Config.TEMP_DIR
                 )
-            return jsonify({"message": 'Simulation has been successfully dispatched to HPC'}), 200
+            if result:
+                return jsonify({"message": result}), 200
+            else:
+                return jsonify({'message': 'Job submission failed'}), 400
         except BaseException as ex:
             return jsonify({'message': "Error occured: " + str(ex)}), 400
     elif request.remote_addr not in Config.ALLOWED_ORIGINS:

@@ -90,12 +90,13 @@ class HPCManager:
             
 
             streams = {'stdin':stdin, 'stdout':stdout, 'stderr':stderr}
+            output = {}
 
             for key, value in streams.items():
-                output = list()
+                
                 try:
                     for line in value:
-                        output.append(line)
+                        output[key] = line
                     print(key, output)
                 except Exception as ex:
                     print('Error while printing stream: ',ex)
@@ -103,7 +104,7 @@ class HPCManager:
             # print("STDIN = ", stdin.readlines())
             # print("STDOUT = ", stdout.readlines())
             # print("STDERR = ", stderr.readlines())
-            return True
+            return output['stdout']
         else: 
             return False
 
