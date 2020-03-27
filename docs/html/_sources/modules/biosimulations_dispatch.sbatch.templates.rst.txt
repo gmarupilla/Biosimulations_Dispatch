@@ -1,0 +1,33 @@
+biosimulations_dispatch.sbatch.templates package
+
+Submodules
+
+biosimulations_dispatch.sbatch.templates.copasi_template module
+
+Template class for copasi sbatch file :Author: Akhil Marupilla <
+
+akhilmteja@gmail.com
+
+ > :Date: 2019-12-06 :Copyright: 2019, UCONN Health :License: MIT
+
+class biosimulations_dispatch.sbatch.templates.copasi_template.CopasiTemplate
+
+   Bases: "object"
+
+   fill_values(value_dict: dict)
+
+biosimulations_dispatch.sbatch.templates.vcell_template module
+
+Template class for copasi sbatch file :Author: Akhil Marupilla <
+
+akhilmteja@gmail.com
+
+ > :Date: 2020-01-25 :Copyright: 2019, UCONN Health :License: MIT
+
+class biosimulations_dispatch.sbatch.templates.vcell_template.VCellTemplate
+
+   Bases: "object"
+
+   fill_values(value_dict: dict)
+
+Module contents
